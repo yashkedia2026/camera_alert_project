@@ -1,0 +1,18 @@
+# virtual env
+venv/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# dotenv secrets
+.env
+
+# DB + snapshots + test artifacts
+alerts.db
+snapshots/
+test_outputs/
+
+# Editor / OS files
+*.swp
+.DS_Store
