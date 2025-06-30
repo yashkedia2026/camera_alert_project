@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Camera Alert Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <h1>Camera Alert Dashboard</h1>
+    <div class="btn-group">
+      <button id="refresh-btn" class="btn">🔄 Refresh</button>
+      <button id="clear-btn" class="btn btn-clear">🗑 Clear</button>
+    </div>
+  </header>
+
+  <!-- Main Grid -->
+  <main class="container">
+    <!-- Live feed -->
+    <section class="card feed-card">
+      <h2>Live Camera Feed</h2>
+      <div class="live-feed">
+        <img id="live-feed" src="/api/stream" alt="Live feed" />
+      </div>
+    </section>
+
+    <!-- Recent events -->
+    <section class="card events-card">
+      <h2>Recent Events</h2>
+      <div id="events-container" class="events">
+        <!-- Events will populate here -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal for enlarged snapshot -->
+  <div id="image-modal" onclick="this.style.display='none'">
+    <img id="modal-img" src="" alt="Snapshot">
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    &copy; 2025 Camera Alert System
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
