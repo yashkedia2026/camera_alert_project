@@ -86,8 +86,9 @@ Run on Windows (PowerShell):
 
 ````powershell
 cd /d C:/Users/msi/Desktop/camera_alert_project
-venv/Scripts/activate.bat
+.\venv\Scripts\activate.bat
 python -m camera_alert.main
+
 ```bash
 python -m camera_alert.main
 ````
