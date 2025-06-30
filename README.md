@@ -43,8 +43,9 @@ A real-time surveillance application that monitors an RTSP camera stream, detect
 ---
 
 ## Installation
-  ```
+  
 1. Clone the repository:
+   ```
    https://github.com/yashkedia2026/camera_alert_project/edit/main/README.md
    cd camera_alert_project
    ```
