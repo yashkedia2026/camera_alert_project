@@ -1,51 +1,91 @@
-// Fetch and display event log
-async function fetchEvents() {
-  const res = await fetch("/api/events");
-  const data = await res.json();
-  const container = document.getElementById("events-container");
-  container.innerHTML = "";
+document.addEventListener("DOMContentLoaded", () => {
+  applyFilters();  // initial load
+});
 
-  if (data.length === 0) {
-    container.innerHTML = "<p>No recent events found.</p>";
-    return;
-  }
-
-  for (const ev of data) {
-    const card = document.createElement("div");
-    card.className = "event-card";
-
-    const img = document.createElement("img");
-    img.src = ev.snapshot_path;
-    img.alt = "Snapshot";
-    img.onclick = () => openModal(ev.snapshot_path);
-
-    const info = document.createElement("div");
-    info.className = "event-info";
-    info.innerHTML = `
-      <h3>${ev.name}</h3>
-      <p>${new Date(ev.timestamp).toLocaleString()}</p>
-    `;
-
-    card.appendChild(img);
-    card.appendChild(info);
-    container.appendChild(card);
-  }
+function getDateRangeParams() {
+  const start = document.getElementById("filterStart").value;
+  const end   = document.getElementById("filterEnd").value;
+  return (start && end) ? `?start=${start}&end=${end}` : "";
 }
 
-// Open image modal
-function openModal(src) {
-  const modal = document.getElementById("image-modal");
-  const modalImg = document.getElementById("modal-img");
-  modalImg.src = src;
-  modal.style.display = "flex";
+function applyFilters() {
+  loadEvents();
+  loadAttendance();
 }
 
-// Button bindings
-document.getElementById("refresh-btn").onclick = fetchEvents;
+// ─── Unknown‐face events ────────────────────────────────────────────────────
+function loadEvents() {
+  const params = getDateRangeParams();
+  fetch(`/api/events${params}`)
+    .then(res => res.json())
+    .then(events => {
+      const container = document.getElementById("eventsList");
+      container.innerHTML = "";
+      if (events.length === 0) {
+        container.innerHTML = "<li>No events in this range.</li>";
+        return;
+      }
+      events.forEach(ev => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <div class="event-entry">
+            <a href="${ev.snapshot_path}" target="_blank" class="event-link">
+              <strong>${ev.name}</strong> — ${ev.timestamp}
+            </a>
+            <button class="btn btn-delete"
+                    title="Delete"
+                    onclick="deleteEvent(${ev.id})">
+              ❌
+            </button>
+          </div>`;
+        container.appendChild(li);
+      });
+    });
+}
 
-document.getElementById("clear-btn").onclick = () => {
-  const container = document.getElementById("events-container");
-  container.innerHTML = "<p>Recent events cleared (not deleted from DB).</p>";
-};
+function deleteEvent(id) {
+  if (!confirm("Delete this event?")) return;
+  fetch(`/api/delete_event/${id}`, { method: "DELETE" })
+    .then(() => loadEvents());
+}
 
-window.onload = fetchEvents;
+function clearEvents() {
+  if (!confirm("Delete ALL unknown-face events?")) return;
+  fetch("/api/clear_events", { method: "DELETE" })
+    .then(() => loadEvents());
+}
+
+function exportEventsCSV() {
+  const params = getDateRangeParams();
+  window.open(`/api/events${params}&format=csv`, "_blank");
+}
+
+// ─── Employee attendance ────────────────────────────────────────────────────
+function loadAttendance() {
+  const params = getDateRangeParams();
+  fetch(`/api/employee_log${params}`)
+    .then(res => res.json())
+    .then(logs => {
+      const tbody = document.getElementById("attendanceBody");
+      tbody.innerHTML = "";
+      if (logs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">No records</td></tr>`;
+        return;
+      }
+      logs.forEach(emp => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${emp.name}</td>
+          <td>${emp.date}</td>
+          <td>${emp.first_seen}</td>
+          <td>${emp.last_seen}</td>`;
+        tbody.appendChild(row);
+      });
+    });
+}
+
+function exportAttendance() {
+  const params = getDateRangeParams();
+  // will download .xlsx via new /api/export_attendance endpoint
+  window.location = `/api/export_attendance${params}`;
+}

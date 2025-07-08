@@ -5,44 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Camera Alert Dashboard</title>
   <link rel="stylesheet" href="styles.css" />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <h1>Camera Alert Dashboard</h1>
-    <div class="btn-group">
-      <button id="refresh-btn" class="btn">🔄 Refresh</button>
-      <button id="clear-btn" class="btn btn-clear">🗑 Clear</button>
+  <header>
+    <h1><i class="fas fa-video"></i> Camera Alert Dashboard</h1>
+    <div class="header-buttons">
+      <button class="btn refresh" onclick="location.reload()"><i class="fas fa-sync"></i> Refresh</button>
+      <button class="btn clear" onclick="clearEvents()"><i class="fas fa-trash"></i> Clear All Events</button>
     </div>
   </header>
 
-  <!-- Main Grid -->
-  <main class="container">
+  <main>
     <!-- Live feed -->
-    <section class="card feed-card">
+    <section class="card full-width">
       <h2>Live Camera Feed</h2>
-      <div class="live-feed">
-        <img id="live-feed" src="/api/stream" alt="Live feed" />
+      <div class="feed-wrapper">
+        <img id="liveFeed" src="/api/stream" alt="Live Camera Feed">
       </div>
     </section>
 
-    <!-- Recent events -->
-    <section class="card events-card">
-      <h2>Recent Events</h2>
-      <div id="events-container" class="events">
-        <!-- Events will populate here -->
+    <!-- Date filters -->
+    <div class="filters-row">
+      <label>From: <input type="date" id="filterStart"></label>
+      <label>To:   <input type="date" id="filterEnd"></label>
+      <button class="btn export" onclick="applyFilters()">Apply Filters</button>
+    </div>
+
+    <!-- Two columns: events / attendance -->
+    <div class="two-column">
+      <!-- Unknown‐face events -->
+      <div class="column card log-card">
+        <h3>Recent Activity</h3>
+        <ul id="eventsList"></ul>
+        <div class="export-btn-wrapper">
+          <button class="btn export" onclick="exportEventsCSV()">
+            <i class="fas fa-file-csv"></i> Export Events
+          </button>
+        </div>
       </div>
-    </section>
+
+      <!-- Employee attendance -->
+      <div class="column card log-card">
+        <h3>Employee Attendance</h3>
+        <table id="attendanceTable">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Date</th>
+              <th>First Seen</th>
+              <th>Last Seen</th>
+            </tr>
+          </thead>
+          <tbody id="attendanceBody"></tbody>
+        </table>
+        <div class="export-btn-wrapper">
+          <button class="btn export" onclick="exportAttendance()">
+            <i class="fas fa-file-excel"></i> Export Attendance
+          </button>
+        </div>
+      </div>
+    </div>
   </main>
 
-  <!-- Modal for enlarged snapshot -->
-  <div id="image-modal" onclick="this.style.display='none'">
-    <img id="modal-img" src="" alt="Snapshot">
-  </div>
-
-  <!-- Footer -->
-  <footer class="footer">
-    &copy; 2025 Camera Alert System
+  <footer>
+    <p>© 2025 Camera Alert System</p>
   </footer>
 
   <script src="script.js"></script>
