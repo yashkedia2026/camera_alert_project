@@ -17,4 +17,4 @@ class MotionDetector:
         self.previous_frame = gray
         thresh = cv2.threshold(delta, 25, 255, cv2.THRESH_BINARY)[1]
         movement = cv2.countNonZero(thresh)
-        return movement > 5000  # You can tune this
+        return movement 
