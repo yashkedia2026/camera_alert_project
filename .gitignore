@@ -13,6 +13,6 @@ alerts.db
 snapshots/
 test_outputs/
 
-# Editor / OS files
+# Editor / OS junk
 *.swp
 .DS_Store

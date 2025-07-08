@@ -43,10 +43,8 @@ A real-time surveillance application that monitors an RTSP camera stream, detect
 ---
 
 ## Installation
-  
-1. Clone the repository:
-   ```
-   https://github.com/yashkedia2026/camera_alert_project/edit/main/README.md
+
+1. Directory 
    cd camera_alert_project
    ```
 2. Create and activate a virtual environment:
@@ -86,9 +84,8 @@ Run on Windows (PowerShell):
 
 ````powershell
 cd /d C:/Users/msi/Desktop/camera_alert_project
-.\venv\Scripts\activate.bat
+venv/Scripts/activate.bat
 python -m camera_alert.main
-
 ```bash
 python -m camera_alert.main
 ````

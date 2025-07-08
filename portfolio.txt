@@ -1,0 +1,73 @@
+Camera Alert System Portfolio Entry
+
+Project: Real-Time Camera Alert System
+Role: Lead Developer & Architect
+
+Overview:
+Developed a robust, modular surveillance application that connects to an RTSP camera stream, detects motion and faces, and delivers multi-channel alerts. The system is highly configurable via environment variables and designed for maintainability and extensibility.
+
+Key Contributions & Responsibilities:
+
+1. RTSP Video Capture & Resilience
+
+   * Implemented video streaming over TCP using OpenCV’s FFMPEG backend with a 5-second timeout.
+   * Developed automatic reconnect logic to handle intermittent stream failures, ensuring continuous monitoring.
+   * Suppressed internal FFMPEG and OpenCV logs to maintain a clear operational console.
+
+2. Motion Detection
+
+   * Designed a motion detection module using grayscale conversion, Gaussian blur, and frame-difference thresholding.
+   * Tuned a pixel-count sensitivity constant to minimize false positives in dynamic lighting conditions.
+   * Integrated motion detection as a pre-filter to reduce unnecessary face processing and conserve resources.
+
+3. Face Recognition & Annotation
+
+   * Built a face recognition component leveraging the `face_recognition` library to encode and match faces.
+   * Managed known faces by loading images from disk and computing embeddings at startup for efficiency.
+   * Annotated live frames with bounding boxes and labels, distinguishing known users from unknown visitors.
+
+4. Per-Face Alert Throttling
+
+   * Implemented per-identity alert timing, tracking the last notification timestamp for each face ID.
+   * Configured a customizable alert interval to prevent notification spam when the same person lingers.
+
+5. Snapshot Capture & Storage
+
+   * Captured and saved annotated snapshots to a dedicated `snapshots/` folder with timestamped filenames (`YYYYMMDD_HHMMSS`).
+   * Ensured the snapshot workflow aligned with alert triggers for consistent evidence logging.
+
+6. SQLite Logging
+
+   * Created a lightweight SQLite schema (`unknown_faces` table) to record each alert with metadata: ID, name, timestamp, and snapshot path.
+   * Added database initialization and parameterized inserts to maintain a persistent event history.
+
+7. Multi-Channel Notifications
+
+   * Integrated Telegram Bot API and email (SMTP with STARTTLS) for real-time notifications.
+   * Abstracted notification channels to easily add SMS or additional services in the future.
+   * Leveraged a global alert throttle to coordinate across channels and avoid overload.
+
+8. Configuration & Deployment
+
+   * Employed `python-dotenv` to load environment variables for all credentials and operational parameters (RTSP URL, tokens, alert interval).
+   * Packaged the application for easy deployment with a `.env.example`, `requirements.txt`, and clear README documentation.
+
+9. Modular Architecture
+
+   * Organized code into distinct modules: `main.py`, `motion_detector.py`, `face_recognizer.py`, `notifier.py`, `logger.py`, `utils.py`, and `time_utils.py`.
+   * Followed single-responsibility principles to simplify testing, maintenance, and future feature additions.
+
+10. User Experience & Shutdown Handling
+
+    * Provided an interactive OpenCV window displaying the annotated feed.
+    * Implemented graceful shutdown on keypress (`q`), ensuring resource cleanup and data integrity.
+
+Technologies & Tools:
+
+* Language: Python 3.10
+* Libraries: OpenCV, face\_recognition, python-dotenv, sqlite3, requests, smtplib
+* Deployment: Virtual environment, environment-variable configuration
+* Version Control: Git, GitHub
+
+Outcome:
+Successfully delivered a production-ready camera alert system that runs reliably in real-world conditions, handles low-light enhancement, and minimizes alert spam—all configurable without code changes. This framework can be extended to support additional cameras, notification channels, and analytics in future iterations.
