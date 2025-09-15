@@ -168,9 +168,3 @@ camera_alert/
 5. Open a Pull Request.
 
 Please follow the existing code style (`black`, `flake8`, `mypy`).
-
----
-
-## License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
